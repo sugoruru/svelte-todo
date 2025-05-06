@@ -16,10 +16,14 @@ jobs:
 
       - name: setup node.js
         uses: actions/setup-node@v3.6.0
+        with:
+          node-version: '18'
       
       # package.jsonの内容でパッケージインストール
       - name: setup app env
-        run: npm i
+        run: |
+          rm -rf package-lock.json node_modules
+          npm i
       
       # ビルド実行、静的リソースを作る
       - name: build static resources
@@ -27,8 +31,8 @@ jobs:
           
       # GitHub Pagesにデプロイする
       - name: deploy to github pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GH_API_TOKEN }}
+          folder: build
+          token: ${{ secrets.GITHUB_TOKEN }}
           # アプリ直下のbuildディレクトリに生成されるため、指定
-          publish_dir: build
